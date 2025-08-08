@@ -1,1 +1,600 @@
-# rhoes-project
+# rhoes-project<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rhoes - The Operating System for Ambition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F9FAFB; /* Off-white (Gray-50) */
+            color: #1F2937; /* Dark Gray (Gray-800) */
+        }
+        
+        /* Theme Colors & Gradients */
+        .text-accent { color: #A855F7; } /* Purple-500 */
+        .bg-accent-gradient {
+            background-image: linear-gradient(to right, #A855F7, #EC4899); /* Purple-500 to Pink-500 */
+        }
+        .border-accent-gradient {
+            border: 2px solid transparent;
+            background-clip: padding-box;
+            border-image: linear-gradient(to right, #A855F7, #EC4899) 1;
+        }
+
+        /* --- ANIMATIONS --- */
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 15px rgba(168, 85, 247, 0.3); } 50% { box-shadow: 0 0 30px rgba(236, 72, 153, 0.4); } }
+        @keyframes drawLine { from { width: 0; } to { width: 100%; } }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        .animate-fadeInUp { opacity: 0; animation: fadeInUp 0.8s ease-out forwards; }
+        .popular-plan-glow { animation: pulseGlow 3s infinite ease-in-out; }
+
+        /* Smooth scroll-in animation */
+        .reveal { opacity: 0; transform: translateY(30px); transition: opacity 1s ease-out, transform 1s ease-out; }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+        
+        /* Hero background styling */
+        .hero-bg {
+            background-color: #F9FAFB;
+            background-image: radial-gradient(circle at 1% 1%, rgba(168, 85, 247, 0.08) 0%, transparent 25%),
+                              radial-gradient(circle at 99% 99%, rgba(236, 72, 153, 0.08) 0%, transparent 25%);
+        }
+
+        /* Card hover shadow effect */
+        .styled-card { transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; border: 1px solid #E5E7EB; background-color: white; }
+        .styled-card:hover { transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.07), 0 10px 10px -5px rgba(0, 0, 0, 0.04); border-color: #A855F7; }
+        
+        /* Button styles */
+        .btn-gradient { @apply bg-accent-gradient text-white font-bold py-3 px-8 rounded-lg transition-all duration-300 ease-in-out; }
+        .btn-gradient:hover { @apply transform scale-105 shadow-lg; box-shadow: 0 0 25px rgba(168, 85, 247, 0.5); }
+        .btn-ghost { @apply bg-transparent border-2 border-gray-300 text-gray-700 font-bold py-3 px-8 rounded-lg transition-all duration-300 ease-in-out; }
+        .btn-ghost:hover { @apply bg-gray-100 border-purple-300 text-gray-900 transform scale-105; }
+        .btn-download { @apply bg-white text-gray-800 border border-gray-200 shadow-sm px-6 py-3 rounded-lg flex items-center justify-center gap-3 font-semibold hover:border-gray-300 hover:shadow-md hover:scale-105 transition-all duration-300; }
+
+
+        /* Connector line for "How it Works" */
+        .steps-connector { position: relative; }
+        .steps-connector::after { content: ''; position: absolute; top: 100px; left: 16.66%; width: 0; height: 2px; background: linear-gradient(to right, #A855F7, #EC4899); z-index: -1; }
+        .steps-connector.animate-line::after { animation: drawLine 1.5s ease-out forwards; animation-delay: 0.5s; width: 66.66%; }
+
+        /* Gemini API Feature Styles */
+        .gemini-input { @apply w-full p-4 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-purple-400 transition; }
+        .gemini-output { @apply mt-6 p-6 bg-white border border-gray-200 rounded-lg shadow-inner min-h-[100px] text-left; }
+        .loader { width: 24px; height: 24px; border: 3px solid rgba(168, 85, 247, 0.3); border-top-color: #A855F7; border-radius: 50%; animation: spin 1s linear infinite; }
+        .modal-overlay { @apply fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 transition-opacity duration-300; }
+        .modal-content { @apply bg-white p-8 rounded-xl shadow-2xl w-full max-w-lg transform transition-all duration-300; }
+
+        /* Partner logo styles */
+        .partner-logo {
+            filter: grayscale(100%);
+            opacity: 0.6;
+            transition: all 0.3s ease;
+        }
+        .partner-logo:hover {
+            filter: grayscale(0%);
+            opacity: 1;
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header -->
+    <header class="fixed top-0 left-0 w-full z-50 transition-colors duration-300" id="header">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-3xl font-black tracking-tighter text-gray-900">RHOES</h1>
+            <nav class="hidden md:flex items-center space-x-8">
+                <a href="#features" class="text-gray-600 hover:text-gray-900 transition">Features</a>
+                <a href="#ai-engine" class="text-gray-600 hover:text-gray-900 transition">AI Engine</a>
+                <a href="#app" class="text-gray-600 hover:text-gray-900 transition">App</a>
+                <a href="#lifestyle" class="text-gray-600 hover:text-gray-900 transition">Lifestyle</a>
+                <a href="#pricing" class="text-gray-600 hover:text-gray-900 transition">Pricing</a>
+            </nav>
+            <a href="#pricing" class="hidden md:block bg-gray-900 text-white font-semibold py-2 px-5 rounded-lg hover:bg-gray-700 transition">Get Started</a>
+            <button id="mobile-menu-button" class="md:hidden text-gray-900 focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+            </button>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-white/95 backdrop-blur-sm">
+            <a href="#features" class="block text-center py-3 text-gray-600 hover:text-gray-900 transition">Features</a>
+            <a href="#ai-engine" class="block text-center py-3 text-gray-600 hover:text-gray-900 transition">AI Engine</a>
+            <a href="#app" class="block text-center py-3 text-gray-600 hover:text-gray-900 transition">App</a>
+            <a href="#lifestyle" class="block text-center py-3 text-gray-600 hover:text-gray-900 transition">Lifestyle</a>
+            <a href="#pricing" class="block text-center py-3 text-gray-600 hover:text-gray-900 transition">Pricing</a>
+            <div class="py-4 text-center">
+                <a href="#pricing" class="bg-gray-900 text-white font-semibold py-2 px-5 rounded-lg hover:bg-gray-700 transition">Get Started</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="relative min-h-screen flex items-center justify-center text-center overflow-hidden hero-bg pt-24 pb-12">
+            <div class="relative z-10 px-4 flex flex-col items-center">
+                <h2 class="animate-fadeInUp text-4xl md:text-6xl lg:text-7xl font-black tracking-tighter uppercase leading-tight mb-6 text-gray-900">
+                    The Future of Work is
+                    <br>
+                    <span class="bg-accent-gradient bg-clip-text text-transparent">Autonomous</span>
+                </h2>
+                <p class="animate-fadeInUp text-lg md:text-xl max-w-3xl mx-auto text-gray-600 mb-10" style="animation-delay: 0.3s;">
+                    Rhoes is your always-on AI workforce. Delegate any task, from drafting documents to launching entire projects, and watch it get done with superhuman speed and precision.
+                </p>
+                <div class="animate-fadeInUp" style="animation-delay: 0.6s;">
+                    <a href="#kickstart" class="btn-gradient text-lg mb-16">
+                        Try The Live Demo
+                    </a>
+                </div>
+                <img src="Gemini_Generated_Image_7epijo7epijo7epi.jpg" 
+                     alt="Person skiing while using a laptop, representing peak performance with Rhoes" 
+                     class="animate-fadeInUp rounded-xl shadow-2xl border border-gray-200 max-w-4xl w-full"
+                     style="animation-delay: 0.9s;"
+                     onerror="this.onerror=null;this.src='https://placehold.co/1000x563';">
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="py-20 md:py-32">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16 reveal">
+                    <h3 class="text-sm uppercase text-accent font-bold tracking-widest">A NEW PARADIGM</h3>
+                    <h2 class="text-4xl md:text-5xl font-bold mt-2">More Than Automation. True Autonomy.</h2>
+                    <p class="max-w-2xl mx-auto mt-4 text-gray-600">Our core technologies work in concert to provide an experience that feels like magic.</p>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="styled-card p-8 rounded-xl reveal flex flex-col">
+                        <img src="https://placehold.co/400x300/F9FAFB/A855F7?text=Collaborative+AI+Network" alt="Abstract graphic for Deca-Core AI" class="rounded-lg mb-6 border border-gray-100" onerror="this.onerror=null;this.src='https://placehold.co/400x300';">
+                        <h3 class="text-2xl font-bold mb-2">Deca-Core AI Team</h3>
+                        <p class="text-gray-600 flex-grow">Don't just assign a task, launch a mission. Rhoes' 10 specialized AI agents work together to deliver complete, polished outcomes.</p>
+                        <button class="generate-ideas-btn mt-6 btn-ghost w-full" data-topic="team productivity">✨ Generate Ideas</button>
+                    </div>
+                    <div class="styled-card p-8 rounded-xl reveal flex flex-col" style="transition-delay: 0.2s;">
+                        <img src="https://placehold.co/400x300/F9FAFB/EC4899?text=One-Shot+Learning+Process" alt="Abstract graphic for Instant Mastery" class="rounded-lg mb-6 border border-gray-100" onerror="this.onerror=null;this.src='https://placehold.co/400x300';">
+                        <h3 class="text-2xl font-bold mb-2">Instant Mastery</h3>
+                        <p class="text-gray-600 flex-grow">Perform a task once while Rhoes observes. It instantly understands the process and turns it into a repeatable, automated mission.</p>
+                        <button class="generate-ideas-btn mt-6 btn-ghost w-full" data-topic="personal workflow automation">✨ Generate Ideas</button>
+                    </div>
+                    <div class="styled-card p-8 rounded-xl reveal flex flex-col" style="transition-delay: 0.4s;">
+                        <img src="https://placehold.co/400x300/F9FAFB/8B5CF6?text=Predictive+Workflow+Graph" alt="Abstract graphic for Oracle Engine" class="rounded-lg mb-6 border border-gray-100" onerror="this.onerror=null;this.src='https://placehold.co/400x300';">
+                        <h3 class="text-2xl font-bold mb-2">The Oracle Engine</h3>
+                        <p class="text-gray-600 flex-grow">Rhoes learns your work rhythm to anticipate your next move, preparing briefs and drafting emails before you even think to ask.</p>
+                        <button class="generate-ideas-btn mt-6 btn-ghost w-full" data-topic="predictive business intelligence">✨ Generate Ideas</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- AI Engine Section -->
+        <section id="ai-engine" class="py-20 md:py-32 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16 reveal">
+                    <h3 class="text-sm uppercase text-accent font-bold tracking-widest">THE MULTI-MODEL ENGINE</h3>
+                    <h2 class="text-4xl md:text-5xl font-bold mt-2">The Power of Many, The Simplicity of One.</h2>
+                    <p class="max-w-3xl mx-auto mt-4 text-gray-600">Rhoes doesn't rely on a single AI. It intelligently orchestrates the world's leading models to select the perfect tool for every task, ensuring unparalleled results.</p>
+                </div>
+                <div class="flex flex-wrap justify-center items-center gap-x-8 gap-y-6 max-w-4xl mx-auto reveal">
+                    <img src="https://placehold.co/120x40/000/fff?text=Claude" alt="Claude AI Logo" class="partner-logo h-8 md:h-10">
+                    <img src="https://placehold.co/120x40/000/fff?text=ChatGPT" alt="ChatGPT Logo" class="partner-logo h-8 md:h-10">
+                    <img src="https://placehold.co/120x40/000/fff?text=Gemini" alt="Gemini AI Logo" class="partner-logo h-8 md:h-10">
+                    <img src="https://placehold.co/120x40/000/fff?text=Grok" alt="Grok AI Logo" class="partner-logo h-8 md:h-10">
+                    <img src="https://placehold.co/120x40/000/fff?text=GLM-4" alt="Zhipu GLM-4 Logo" class="partner-logo h-8 md:h-10">
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works Section -->
+        <section id="how-it-works" class="py-20 md:py-32">
+             <div class="container mx-auto px-6">
+                <div class="text-center mb-16 reveal">
+                    <h3 class="text-sm uppercase text-accent font-bold tracking-widest">EFFORTLESS EXECUTION</h3>
+                    <h2 class="text-4xl md:text-5xl font-bold mt-2">From Intent to Completion in 3 Steps.</h2>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8 text-center steps-connector">
+                    <div class="reveal">
+                        <div class="p-4 border-accent-gradient rounded-xl mb-6 inline-block">
+                           <img src="https://placehold.co/800x600/FFFFFF/333333?text=Step+1:+Command" alt="UI for giving a command" class="rounded-lg" onerror="this.onerror=null;this.src='https://placehold.co/800x600';">
+                        </div>
+                        <h3 class="text-2xl font-bold mb-2">1. State Your Mission</h3>
+                        <p class="text-gray-600">Use natural language—talk or type. "Rhoe, launch a marketing campaign for our new product..."</p>
+                    </div>
+                    <div class="reveal" style="transition-delay: 0.2s;">
+                        <div class="p-4 border-accent-gradient rounded-xl mb-6 inline-block">
+                           <img src="https://placehold.co/800x600/FFFFFF/333333?text=Step+2:+Autonomous+Work" alt="Visualization of AI agents working" class="rounded-lg" onerror="this.onerror=null;this.src='https://placehold.co/800x600';">
+                        </div>
+                        <h3 class="text-2xl font-bold mb-2">2. Agents Execute</h3>
+                        <p class="text-gray-600">The Deca-Core AI team gets to work. They collaborate, create, and refine in the background.</p>
+                    </div>
+                    <div class="reveal" style="transition-delay: 0.4s;">
+                        <div class="p-4 border-accent-gradient rounded-xl mb-6 inline-block">
+                           <img src="https://placehold.co/800x600/FFFFFF/333333?text=Step+3:+Review+Delivery" alt="Final deliverables in a folder" class="rounded-lg" onerror="this.onerror=null;this.src='https://placehold.co/800x600';">
+                        </div>
+                        <h3 class="text-2xl font-bold mb-2">3. Review & Deploy</h3>
+                        <p class="text-gray-600">Rhoes delivers the completed mission for your approval, organized and ready for deployment.</p>
+                    </div>
+                </div>
+             </div>
+        </section>
+
+        <!-- App Section -->
+        <section id="app" class="py-20 md:py-32 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div class="reveal">
+                        <h3 class="text-sm uppercase text-accent font-bold tracking-widest">YOUR AMBITION, UNTETHERED</h3>
+                        <h2 class="text-4xl md:text-5xl font-bold mt-2">Work Anonymously. Work Autonomously.</h2>
+                        <p class="mt-6 text-gray-600 text-lg">The Rhoes app is your silent partner. Delegate missions on the go and trust them to be completed with absolute discretion. No digital footprint, just pure execution. Your work happens in the background, securely and privately, delivering results directly to you, wherever you are.</p>
+                        <div class="mt-8 flex flex-col sm:flex-row gap-4">
+                            <a href="#" class="btn-download">
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.53,3.85A6.OT,6.OT,0,0,0,12,6.2,6.09,6.09,0,0,0,6.47,3.85,6.33,6.33,0,0,0,3,9.74a6.23,6.23,0,0,0,1.7,4.32l.1.11,4.45,4.33a2.67,2.67,0,0,0,3.62.08l.14-.13,4.45-4.33.1-.11a6.23,6.23,0,0,0,1.7-4.32A6.33,6.33,0,0,0,17.53,3.85Zm-1,9.2a4.24,4.24,0,0,1-1.2,3l-.1.1-4.45,4.33a.67.67,0,0,1-.9,0l-4.45-4.33-.1-.1a4.24,4.24,0,0,1-1.2-3,4.34,4.34,0,0,1,2.3-3.75,4.09,4.09,0,0,1,4.6,1.1,1,1,0,0,0,1.42,0,4.09,4.09,0,0,1,4.6-1.1A4.34,4.34,0,0,1,16.5,13.05Z"></path><path d="M16.13,3.24a1,1,0,0,0-1.2-.42,3.11,3.11,0,0,0-1.93.85,1,1,0,0,0,1.42,1.42,1.12,1.12,0,0,1,.71-.27,1,1,0,0,0,.42-1.2A.18.18,0,0,0,16.13,3.24Z"></path></svg>
+                                <span>Download for Mac</span>
+                            </a>
+                             <a href="#" class="btn-download">
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M2,22H22V2H2ZM12.33,10.15,15.7,6.8l1.41,1.41-3.37,3.35,3.37,3.35-1.41,1.41-3.37-3.35V20H10.67V12.72L7.3,16.07,5.89,14.66l3.37-3.35L5.89,7.96,7.3,6.55l3.37,3.35V4h1.66Z"></path></svg>
+                                <span>Download for Windows 11</span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="reveal" style="transition-delay: 0.2s;">
+                        <img src="https://placehold.co/500x700/FFFFFF/E5E7EB?text=Rhoes+App+UI" alt="Rhoes App UI Mockup" class="rounded-xl shadow-2xl mx-auto">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Lifestyle Section -->
+        <section id="lifestyle" class="py-20 md:py-32">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16 reveal">
+                    <h3 class="text-sm uppercase text-accent font-bold tracking-widest">BEYOND THE 9-TO-5</h3>
+                    <h2 class="text-4xl md:text-5xl font-bold mt-2">This Isn't Software. It's a Lifestyle.</h2>
+                    <p class="max-w-3xl mx-auto mt-4 text-gray-600">Integrate genius into your everyday. From planning your next vacation and managing your investment portfolio to designing a personal fitness plan, Rhoes transcends the workflow. It's an operating system for your life.</p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="styled-card p-6 rounded-xl reveal">
+                        <img src="https://placehold.co/400x300/F9FAFB/A855F7?text=Travel+Planning" alt="Lifestyle image for travel" class="rounded-lg mb-4">
+                        <h3 class="text-xl font-bold">Plan Your Escape</h3>
+                        <p class="text-gray-600">"Rhoe, find the best flights to Bali for a 10-day trip in May and create an itinerary of top-rated yoga retreats."</p>
+                    </div>
+                    <div class="styled-card p-6 rounded-xl reveal" style="transition-delay: 0.2s;">
+                        <img src="https://placehold.co/400x300/F9FAFB/EC4899?text=Fitness+Goals" alt="Lifestyle image for fitness" class="rounded-lg mb-4">
+                        <h3 class="text-xl font-bold">Crush Your Goals</h3>
+                        <p class="text-gray-600">"Rhoe, design a 4-week marathon training program for a beginner and add it to my calendar."</p>
+                    </div>
+                    <div class="styled-card p-6 rounded-xl reveal" style="transition-delay: 0.4s;">
+                        <img src="https://placehold.co/400x300/F9FAFB/8B5CF6?text=Creative+Projects" alt="Lifestyle image for creativity" class="rounded-lg mb-4">
+                        <h3 class="text-xl font-bold">Fuel Your Passion</h3>
+                        <p class="text-gray-600">"Rhoe, research the history of minimalist architecture and generate a mood board for a new home design project."</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gemini API Mission Kickstart Section -->
+        <section id="kickstart" class="py-20 md:py-32 bg-white">
+            <div class="container mx-auto px-6 text-center">
+                <div class="max-w-3xl mx-auto reveal">
+                    <h3 class="text-sm uppercase text-accent font-bold tracking-widest">LIVE DEMO</h3>
+                    <h2 class="text-4xl md:text-5xl font-bold mt-2">Kickstart Your Next Big Idea.</h2>
+                    <p class="max-w-2xl mx-auto mt-4 text-gray-600 mb-8">
+                        Type a high-level goal below and watch Rhoes' AI generate the initial action plan instantly.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <input type="text" id="mission-input" class="gemini-input flex-grow" placeholder="e.g., Launch a new weekly podcast on tech trends">
+                        <button id="kickstart-btn" class="btn-gradient flex-shrink-0 flex items-center justify-center gap-2">
+                            <span id="kickstart-btn-text">✨ Kickstart Mission</span>
+                            <div id="kickstart-loader" class="loader hidden"></div>
+                        </button>
+                    </div>
+                    <div id="mission-output" class="gemini-output">
+                        <p class="text-gray-400">Your generated action plan will appear here...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing Section -->
+        <section id="pricing" class="py-20 md:py-32">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16 reveal">
+                    <h3 class="text-sm uppercase text-accent font-bold tracking-widest">THE INVESTMENT</h3>
+                    <h2 class="text-4xl md:text-5xl font-bold mt-2">A Price for Uncompromising Value.</h2>
+                    <p class="max-w-2xl mx-auto mt-4 text-gray-600">This isn't an expense. It's an investment in your most valuable asset: your time.</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
+                    <!-- Pricing Tier 0: Startup -->
+                    <div class="styled-card p-8 rounded-xl flex flex-col reveal">
+                        <h3 class="text-2xl font-bold">Startup</h3>
+                        <p class="text-gray-500 mt-1">For the idea that's about to ignite.</p>
+                        <div class="my-8"><span class="text-5xl font-black">Free</span></div>
+                        <ul class="space-y-3 text-gray-600 mb-8 flex-grow">
+                            <li class="flex items-center"><svg class="w-5 h-5 text-accent mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>1 Specialized AI Agent</li>
+                            <li class="flex items-center"><svg class="w-5 h-5 text-accent mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>5 Missions / month</li>
+                            <li class="flex items-center"><svg class="w-5 h-5 text-accent mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Community Support</li>
+                        </ul>
+                        <button class="btn-ghost w-full">Start for Free</button>
+                    </div>
+                    
+                    <!-- Pricing Tier 1: Professional -->
+                    <div class="styled-card p-8 rounded-xl flex flex-col reveal" style="transition-delay: 0.1s;">
+                        <h3 class="text-2xl font-bold">Professional</h3>
+                        <p class="text-gray-500 mt-1">For the individual force-of-nature.</p>
+                        <div class="my-8"><span class="text-5xl font-black">$99</span><span class="text-gray-500">/mo</span></div>
+                        <ul class="space-y-3 text-gray-600 mb-8 flex-grow">
+                            <li class="flex items-center"><svg class="w-5 h-5 text-accent mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Full Deca-Core AI Access</li>
+                            <li class="flex items-center"><svg class="w-5 h-5 text-accent mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Oracle & Mastery Engines</li>
+                            <li class="flex items-center"><svg class="w-5 h-5 text-accent mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>1-on-1 Onboarding Call</li>
+                        </ul>
+                        <button class="btn-ghost w-full">Choose Professional</button>
+                    </div>
+
+                    <!-- Pricing Tier 2: Business -->
+                    <div class="p-1 rounded-xl bg-accent-gradient flex flex-col reveal popular-plan-glow" style="transition-delay: 0.2s;">
+                        <div class="bg-white h-full p-8 rounded-lg">
+                            <div class="flex justify-between items-center"><h3 class="text-2xl font-bold">Business</h3><span class="bg-accent-gradient text-white text-xs font-bold px-3 py-1 rounded-full">POPULAR</span></div>
+                            <p class="text-gray-500 mt-1">For the agile, high-growth team.</p>
+                            <div class="my-8"><span class="text-5xl font-black">$499</span><span class="text-gray-500">/mo</span></div>
+                            <ul class="space-y-3 mb-8 flex-grow text-gray-600">
+                                <li class="flex items-center"><svg class="w-5 h-5 text-accent mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Everything in Professional</li>
+                                <li class="flex items-center"><svg class="w-5 h-5 text-accent mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Up to 5 Team Seats</li>
+                                <li class="flex items-center"><svg class="w-5 h-5 text-accent mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Priority Human Support</li>
+                            </ul>
+                            <button class="btn-gradient w-full">Choose Business</button>
+                        </div>
+                    </div>
+
+                    <!-- Pricing Tier 3: Enterprise -->
+                    <div class="styled-card p-8 rounded-xl flex flex-col reveal" style="transition-delay: 0.3s;">
+                        <h3 class="text-2xl font-bold">Enterprise</h3>
+                        <p class="text-gray-500 mt-1">For the industry-defining organization.</p>
+                        <div class="my-8"><span class="text-5xl font-black">Custom</span></div>
+                        <ul class="space-y-3 text-gray-600 mb-8 flex-grow">
+                            <li class="flex items-center"><svg class="w-5 h-5 text-accent mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Everything in Business</li>
+                            <li class="flex items-center"><svg class="w-5 h-5 text-accent mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Unlimited Seats & Missions</li>
+                            <li class="flex items-center"><svg class="w-5 h-5 text-accent mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Dedicated Rhoes Specialist</li>
+                        </ul>
+                        <button class="btn-ghost w-full">Contact Sales</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sponsors/Partners Section -->
+        <section id="sponsors" class="py-16">
+            <div class="container mx-auto px-6 text-center">
+                <h3 class="text-lg font-semibold text-gray-500 mb-8 reveal">POWERED BY WORLD-CLASS TECHNOLOGY</h3>
+                <div class="flex flex-wrap justify-center items-center gap-x-8 gap-y-6 max-w-4xl mx-auto reveal">
+                    <img src="https://placehold.co/120x40/000/fff?text=Claude" alt="Claude AI Logo" class="partner-logo h-8 md:h-10">
+                    <img src="https://placehold.co/120x40/000/fff?text=ChatGPT" alt="ChatGPT Logo" class="partner-logo h-8 md:h-10">
+                    <img src="https://placehold.co/120x40/000/fff?text=Gemini" alt="Gemini AI Logo" class="partner-logo h-8 md:h-10">
+                    <img src="https://placehold.co/120x40/000/fff?text=Grok" alt="Grok AI Logo" class="partner-logo h-8 md:h-10">
+                    <img src="https://placehold.co/120x40/000/fff?text=GLM-4" alt="Zhipu GLM-4 Logo" class="partner-logo h-8 md:h-10">
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="bg-white py-12">
+            <div class="container mx-auto px-6 text-center text-gray-500">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4 reveal">Your Ambition, Amplified.</h2>
+                <div class="mb-8 reveal">
+                    <a href="#pricing" class="btn-gradient">Get Rhoes Today</a>
+                </div>
+                <div class="border-t border-gray-200 pt-8 mt-8 flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-base">&copy; 2025 Rhoes Inc.</p>
+                    <div class="flex space-x-6 mt-4 md:mt-0 font-semibold">
+                        <a href="#features" class="hover:text-gray-900">Features</a>
+                        <a href="#app" class="hover:text-gray-900">App</a>
+                        <a href="#pricing" class="hover:text-gray-900">Pricing</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <!-- Modal for Idea Generation -->
+    <div id="idea-modal" class="modal-overlay hidden opacity-0">
+        <div class="modal-content scale-95">
+            <h3 class="text-2xl font-bold mb-4">✨ Generate Project Ideas</h3>
+            <p id="idea-modal-topic" class="text-gray-600 mb-6">Enter a topic and let Rhoes brainstorm for you.</p>
+            <input type="text" id="idea-input" class="gemini-input" placeholder="Enter a topic, e.g., sustainable fashion">
+            <div class="flex justify-end gap-4 mt-6">
+                <button id="close-modal-btn" class="btn-ghost">Cancel</button>
+                <button id="generate-idea-btn" class="btn-gradient flex items-center justify-center gap-2">
+                    <span id="generate-idea-btn-text">Generate</span>
+                    <div id="generate-idea-loader" class="loader hidden"></div>
+                </button>
+            </div>
+            <div id="idea-output" class="gemini-output mt-6 hidden"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- UI Elements ---
+            const header = document.getElementById('header');
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const kickstartBtn = document.getElementById('kickstart-btn');
+            const missionInput = document.getElementById('mission-input');
+            const missionOutput = document.getElementById('mission-output');
+            const kickstartLoader = document.getElementById('kickstart-loader');
+            const kickstartBtnText = document.getElementById('kickstart-btn-text');
+            const ideaModal = document.getElementById('idea-modal');
+            const closeModalBtn = document.getElementById('close-modal-btn');
+            const generateIdeasBtns = document.querySelectorAll('.generate-ideas-btn');
+            const ideaInput = document.getElementById('idea-input');
+            const generateIdeaBtn = document.getElementById('generate-idea-btn');
+            const ideaOutput = document.getElementById('idea-output');
+            const generateIdeaLoader = document.getElementById('generate-idea-loader');
+            const generateIdeaBtnText = document.getElementById('generate-idea-btn-text');
+            const ideaModalTopic = document.getElementById('idea-modal-topic');
+
+            // --- Gemini API Configuration ---
+            const API_KEY = ""; // Kept empty as per instructions
+            const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${API_KEY}`;
+            
+            // --- Functions ---
+            const callGeminiAPI = async (prompt, outputElement, loaderElement, buttonTextElement) => {
+                if (loaderElement) loaderElement.classList.remove('hidden');
+                if (buttonTextElement) buttonTextElement.classList.add('hidden');
+                if (outputElement) {
+                    outputElement.innerHTML = '';
+                    outputElement.classList.remove('hidden');
+                }
+
+                let chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
+                const payload = { contents: chatHistory };
+
+                try {
+                    // Exponential backoff for retries
+                    let response;
+                    let retries = 3;
+                    let delay = 1000;
+                    for (let i = 0; i < retries; i++) {
+                        response = await fetch(API_URL, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+                        if (response.ok) break;
+                        await new Promise(res => setTimeout(res, delay));
+                        delay *= 2;
+                    }
+
+                    if (!response.ok) {
+                        throw new Error(`API request failed with status ${response.status}`);
+                    }
+
+                    const result = await response.json();
+                    if (result.candidates && result.candidates.length > 0 && result.candidates[0].content.parts.length > 0) {
+                        let text = result.candidates[0].content.parts[0].text;
+                        // Basic markdown to HTML conversion
+                        text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'); // Bold
+                        text = text.replace(/\n/g, '<br>'); // Newlines
+                        text = text.replace(/\* (.*?)(<br>|$)/g, '<li class="list-disc list-inside ml-4">$1</li>'); // List items
+                        if (outputElement) outputElement.innerHTML = text;
+                    } else {
+                        if (outputElement) outputElement.innerHTML = '<p class="text-red-500">Sorry, the AI could not generate a response. Please try again.</p>';
+                    }
+                } catch (error) {
+                    console.error("Gemini API Error:", error);
+                    if (outputElement) outputElement.innerHTML = `<p class="text-red-500">An error occurred. Please check the console for details.</p>`;
+                } finally {
+                    if (loaderElement) loaderElement.classList.add('hidden');
+                    if (buttonTextElement) buttonTextElement.classList.remove('hidden');
+                }
+            };
+
+            const toggleModal = (show) => {
+                if (show) {
+                    if (ideaModal) {
+                        ideaModal.classList.remove('hidden');
+                        setTimeout(() => {
+                            ideaModal.classList.remove('opacity-0');
+                            ideaModal.querySelector('.modal-content').classList.remove('scale-95');
+                        }, 10);
+                    }
+                } else {
+                    if (ideaModal) {
+                        ideaModal.classList.add('opacity-0');
+                        ideaModal.querySelector('.modal-content').classList.add('scale-95');
+                        setTimeout(() => ideaModal.classList.add('hidden'), 300);
+                    }
+                }
+            };
+
+            // --- Event Listeners ---
+            if (header) {
+                window.addEventListener('scroll', () => {
+                    header.classList.toggle('bg-white/80', window.scrollY > 50);
+                    header.classList.toggle('backdrop-blur-sm', window.scrollY > 50);
+                    header.classList.toggle('shadow-sm', window.scrollY > 50);
+                });
+            }
+
+            if (mobileMenuButton) {
+                mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+            }
+
+            if (kickstartBtn) {
+                kickstartBtn.addEventListener('click', () => {
+                    const mission = missionInput.value.trim();
+                    if (!mission) {
+                        missionOutput.innerHTML = '<p class="text-red-500">Please enter a mission goal.</p>';
+                        return;
+                    }
+                    const prompt = `As an expert project manager AI, break down the following high-level goal into a concise, actionable list of initial steps. The goal is: "${mission}"`;
+                    callGeminiAPI(prompt, missionOutput, kickstartLoader, kickstartBtnText);
+                });
+            }
+            
+            if (generateIdeasBtns) {
+                generateIdeasBtns.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const topic = btn.dataset.topic;
+                        if (ideaInput) ideaInput.value = '';
+                        if (ideaModalTopic) ideaModalTopic.textContent = `Generating ideas related to: ${topic}`;
+                        if (ideaInput) ideaInput.dataset.baseTopic = topic;
+                        if (ideaOutput) ideaOutput.classList.add('hidden');
+                        toggleModal(true);
+                    });
+                });
+            }
+
+            if (closeModalBtn) {
+                closeModalBtn.addEventListener('click', () => toggleModal(false));
+            }
+            
+            if (ideaModal) {
+                ideaModal.addEventListener('click', (e) => {
+                    if (e.target === ideaModal) toggleModal(false);
+                });
+            }
+            
+            if (generateIdeaBtn) {
+                generateIdeaBtn.addEventListener('click', () => {
+                    const customTopic = ideaInput.value.trim();
+                    const baseTopic = ideaInput.dataset.baseTopic;
+                    const topic = customTopic || baseTopic;
+                     if (!topic) {
+                        if (ideaOutput) {
+                           ideaOutput.innerHTML = '<p class="text-red-500">Please enter a topic.</p>';
+                           ideaOutput.classList.remove('hidden');
+                        }
+                        return;
+                    }
+                    const prompt = `As a creative AI assistant, generate 3 innovative project or business ideas related to the topic of "${topic}". Present them as a short, scannable list.`;
+                    callGeminiAPI(prompt, ideaOutput, generateIdeaLoader, generateIdeaBtnText);
+                });
+            }
+
+            // Intersection Observer for scroll animations
+            const revealElements = document.querySelectorAll('.reveal');
+            const stepsConnector = document.querySelector('.steps-connector');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        if (entry.target.classList.contains('steps-connector')) {
+                            entry.target.classList.add('animate-line');
+                        }
+                        if (!entry.target.classList.contains('steps-connector')) {
+                           observer.unobserve(entry.target);
+                        }
+                    }
+                });
+            }, { threshold: 0.2 });
+
+            revealElements.forEach(el => observer.observe(el));
+            if(stepsConnector) observer.observe(stepsConnector);
+        });
+    </script>
+</body>
+</html>
